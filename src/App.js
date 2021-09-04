@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header title={title}/>
+      {isExpired ? null : <Header title={title}/>}
       {isExpired ? singIn ? <SingIn setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} /> 
       : <Login setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} data={data}/> 
       : <Body setTitle={setTitle}/> }
