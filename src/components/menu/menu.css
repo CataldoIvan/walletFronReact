@@ -1,0 +1,16 @@
+.welcome{
+    height: 10vh;
+    background-color: #00B1EA;
+    margin-bottom: 1vh;
+  }
+
+
+.avatar {
+  padding-left: 1vw;
+  background-color: #00B1EA;
+}
+
+.name{
+  padding-right: 1vw;
+  color: rgb(255, 255, 255);
+}

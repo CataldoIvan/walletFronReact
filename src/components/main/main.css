@@ -1,0 +1,17 @@
+.saldo{
+    height: 33vh;
+    margin-bottom: 6vh;
+  }
+  .headerSaldo{
+    padding: 2vh;
+  }
+  .headerDolar{
+    padding: 2vh;
+  }
+     
+  .dolar{
+    height: 33vh;
+  }
+.body{
+    padding-top: 7em;
+  }

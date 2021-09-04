@@ -1,0 +1,16 @@
+header {
+  height: 10vh;
+  width: 100%;
+  background-color: #00B1EA;
+  position: fixed;
+  z-index: 100;
+}
+.title{
+  color: white;
+  padding-left: 8vw;
+  text-align: start;
+}
+
+.head{
+  height: 4em;
+}
