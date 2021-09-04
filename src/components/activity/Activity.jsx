@@ -16,7 +16,9 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import useFetch from '../../hooks/useFetch';
 import dateFormat from 'dateformat';
-import { Avatar, Grid } from '@material-ui/core';
+import { Avatar, Grid, TextField } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Loading from '../loading/Loading';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -118,61 +120,78 @@ export default function CustomPaginationActionsTable() {
     };
 
     return (
-        <Grid item container xs={12} sm={8}>
-        <Grid xs={12} sm={2}></Grid>
-        <Grid xs={12} sm={10}>
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="custom pagination table">
-                <TableBody>
-                    {data ?
-                        (rowsPerPage > 0
-                            ? data?.activitys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : data?.activitys
-                        ).map((activity) => (
-                            <TableRow key={activity._id}>
-                                <TableCell style={{ width: 160 }} align="right">
-                                    <Avatar>{activity.origen_nombre.substring(0, 1).toUpperCase()}</Avatar>
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="right">
-                                    {activity.tipo_transaccion === 1 ? "Enviaste dinero a "
-                                        + activity.destino_nombre : "Recibiste dinero de " + activity.origen_nombre}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="right">
-                                    ${activity.monto}
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    {dateFormat(date, "dd/mm/yyyy") === dateFormat(activity.updatedAt, "dd/mm/yyyy") ?
-                                        dateFormat(activity.updatedAt, "hh:ss") : dateFormat(activity.updatedAt, "dd/mm/yyyy")}
-                                </TableCell>
-                            </TableRow>
-                        )) : null}
-                    {emptyRows > 0 && (
-                        <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={6} />
-                        </TableRow>
-                    )}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                            colSpan={3}
-                            count={data?.activitys.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            SelectProps={{
-                                inputProps: { 'aria-label': 'rows per page' },
-                                native: true,
-                            }}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                        />
-                    </TableRow>
-                </TableFooter>
-            </Table>
-        </TableContainer>
-        </Grid>
-        </Grid>
+        <>
+            <Grid item container xs={12} sm={8}>
+                {loading ? <Loading /> : null}
+
+                <Grid xs={12} sm={2}></Grid>
+                <Grid xs={12} sm={10}>
+                    <Autocomplete
+                        id="free-solo-demo"
+                        freeSolo
+                        size="small"
+                        options={data?.activitys.map((activitys) => activitys.origen_nombre)}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Buscar por origen" margin="normal" variant="outlined" />
+                        )}
+                    />
+                </Grid>
+                <Grid xs={12} sm={2}></Grid>
+                <Grid xs={12} sm={10}>
+                    <TableContainer component={Paper}>
+                        <Table className={classes.table} aria-label="custom pagination table">
+                            <TableBody>
+                                {data ?
+                                    (rowsPerPage > 0
+                                        ? data?.activitys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        : data?.activitys
+                                    ).map((activity) => (
+                                        <TableRow key={activity._id}>
+                                            <TableCell style={{ width: 80 }} align="right">
+                                                <Avatar>{activity.origen_nombre.substring(0, 1).toUpperCase()}</Avatar>
+                                            </TableCell>
+                                            <TableCell style={{ width: 250 }} align="Left">
+                                                {activity.tipo_transaccion === 1 ? "Enviaste dinero a "
+                                                    + activity.destino_nombre : "Recibiste dinero de " + activity.origen_nombre}
+                                            </TableCell>
+                                            <TableCell style={{ width: 160 }} align="right">
+                                                ${activity.monto}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" align="right">
+                                                {dateFormat(date, "dd/mm/yyyy") === dateFormat(activity.updatedAt, "dd/mm/yyyy") ?
+                                                    dateFormat(activity.updatedAt, "hh:ss") : dateFormat(activity.updatedAt, "dd/mm/yyyy")}
+                                            </TableCell>
+                                        </TableRow>
+                                    )) : null}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                        colSpan={3}
+                                        count={data?.activitys.length}
+                                        rowsPerPage={rowsPerPage}
+                                        labelRowsPerPage={"Filas por pagina: "}
+                                        page={page}
+                                        SelectProps={{
+                                            inputProps: { 'aria-label': 'rows per page' },
+                                            native: true,
+                                        }}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </Grid>
+            </Grid>
+        </>
     );
 }

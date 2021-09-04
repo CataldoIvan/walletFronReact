@@ -6,6 +6,7 @@ import Body from './components/body/Body';
 import useFetch from './hooks/useFetch';
 import { useJwt } from "react-jwt";
 import SingIn from './components/singIn/SingIn';
+import Loading from './components/loading/Loading';
 
 
 function App() {
@@ -28,11 +29,13 @@ function App() {
     }
   }, [data]);
 
+
   return (
     <div className="App">
-      {isExpired ? null : <Header title={title}/>}
-      {isExpired ? singIn ? <SingIn setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} /> 
-      : <Login setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} data={data}/> 
+      {loading ? <Loading/> : null}
+      {isExpired ? null : <Header title={title} />}
+      {isExpired ? singIn ? <SingIn setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} loading={loading}/> 
+      : <Login setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} loading={loading}/> 
       : <Body setTitle={setTitle}/> }
     </div>
   );

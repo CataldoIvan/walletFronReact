@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const iconsPrimary = [faHome, faWallet, faArchive, faArrowAltCircleRight, faArrowAltCircleLeft];
 const iconsSecundary = [faUser, faSignOutAlt];
 
-const Menu = ({ setMenuOptions }) => {
+const Menu = ({ setMenuOptions, dataUser }) => {
 
   const handleLogOut = () => {
 
@@ -22,10 +22,11 @@ const Menu = ({ setMenuOptions }) => {
         open>
         <Grid container className={"welcome"} direction="row" alignItems="center">
           <Grid item xs={12} sm={4} className={"avatar"}>
-            <Avatar>T</Avatar>
+            <Avatar>{dataUser?.user[0].name.substring(0, 1).toUpperCase()
+            }</Avatar>
           </Grid>
           <Grid item xs={12} sm={8} className={"name"}>
-            <Typography variant="body2">Hola Tomas!</Typography>
+            <Typography variant="body2">Hola {dataUser?.user[0].name}!</Typography>
           </Grid>
         </Grid>
         <List>

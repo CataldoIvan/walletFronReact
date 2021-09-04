@@ -1,15 +1,14 @@
-import { Avatar, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, TextField, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import './login.css';
+import { Avatar, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, Tooltip, Typography } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock } from '@fortawesome/free-solid-svg-icons'
 import Forgetpassword from '../forgetpassword/Forgetpassword';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from '@material-ui/lab/Alert';
 
+const Login = ({ setUrl, setRequestOptions, setSingIn }) => {
 
-const Login = ({ setUrl, setRequestOptions, setSingIn, data }) => {
-
+  const [validatedFields, setValidatedFields] = useState(false);
   const [forgetPassword, setForgetPassword] = useState(false);
   const [inputEmail, setinputEmail] = useState('');
   const [inputPassword, setinputPassword] = useState('');
@@ -19,36 +18,48 @@ const Login = ({ setUrl, setRequestOptions, setSingIn, data }) => {
 
   const formHandler = (e) => {
     e.preventDefault();
-    setUrl("https://users-wallet-go.herokuapp.com/users/login");
-    setRequestOptions({
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: inputEmail, password: inputPassword })
-    })
-  };  
+    if (validatedFields && inputEmail !== '' && inputPassword !== '') {
+      setUrl("https://users-wallet-go.herokuapp.com/users/login");
+      setRequestOptions({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: inputEmail, password: inputPassword })
+      });
+    }
+    else {
+      if (inputEmail === '') { setErrorEmail('Este campo es obligatorio.'); }
+      if (inputPassword === '') { setErrorPassword('Este campo es obligatorio.'); }
+    }
+  };
 
   const emailValidation = (e) => {
     let regEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if(e.target.value === ''){ 
-      setErrorEmail('Este campo es obligatorio.')
+    if (e.target.value === '') {
+      setErrorEmail('Este campo es obligatorio.');
+      setValidatedFields(false);
     }
     else if (e.target.value.match(regEmail) || e.target.value === '') {
       setErrorEmail('')
+      setValidatedFields(true);
     } else {
-      setErrorEmail('El email es invalido.')
+      setErrorEmail('El email es invalido.');
+      setValidatedFields(false);
     }
   }
 
   const passwordValidation = (e) => {
     //Mínimo ocho caracteres, al menos una letra y un número.
     let regPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if(e.target.value === ''){ 
-      setErrorPassword('Este campo es obligatorio.')
+    if (e.target.value === '') {
+      setErrorPassword('Este campo es obligatorio.');
+      setValidatedFields(false);
     }
     else if (e.target.value.match(regPassword) || e.target.value === '') {
-      setErrorPassword('')
+      setErrorPassword('');
+      setValidatedFields(true);
     } else {
-      setErrorPassword('La contraseña es invalida.')
+      setErrorPassword('La contraseña es invalida.');
+      setValidatedFields(false);
     }
   }
 
@@ -72,25 +83,27 @@ const Login = ({ setUrl, setRequestOptions, setSingIn, data }) => {
           <h2>Iniciar sesion</h2>
         </Grid>
         <FormControl variant="outlined">
-        <OutlinedInput
-          style={textFieldStyle}
-          variant="outlined"
-          placeholder='Ingresar email'
-          required
-          margin="dense"
-          error={errorEmail !== ''}
-          id="standard-error-helper-text"
-          value={inputEmail}
-          helperText={errorEmail}
-          onBlur={(e) => emailValidation(e)}
-          onChange={(e) => { setinputEmail(e.target.value) }}
-        />
-        {errorEmail !== '' ? (
+          <OutlinedInput
+            style={textFieldStyle}
+            variant="outlined"
+            placeholder='Ingresar email'
+            required
+            margin="dense"
+            error={errorEmail !== ''}
+            id="standard-error-helper-text"
+            value={inputEmail}
+            helperText={errorEmail}
+            onBlur={(e) => emailValidation(e)}
+            onChange={(e) => { setinputEmail(e.target.value) }}
+          />
+          {errorEmail !== '' ? (
             <FormHelperText error id="accountId-error">
               {errorEmail}
             </FormHelperText>
           ) : null}
         </FormControl>
+        <Tooltip title="La contraseña debe ser de mas de 8 caracteres 
+        y debe contener al menos 1 mayuscula y 1 numero" placement="left" arrow>    
         <FormControl variant="outlined">
           <OutlinedInput style={textFieldStyle}
             placeholder='Ingresar contraseña'
@@ -122,6 +135,7 @@ const Login = ({ setUrl, setRequestOptions, setSingIn, data }) => {
             </FormHelperText>
           ) : null}
         </FormControl>
+        </Tooltip>
         <FormControlLabel
           control={
             <Checkbox
@@ -144,7 +158,7 @@ const Login = ({ setUrl, setRequestOptions, setSingIn, data }) => {
         </Typography>
       </Paper>
       <Forgetpassword setForgetPassword={setForgetPassword} forgetPassword={forgetPassword} />
-</div>
+    </div>
   );
 };
 export default Login;

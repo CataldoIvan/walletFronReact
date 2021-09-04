@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './main.css';
-import { Button, Container, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import { Divider, Grid, Paper, Typography } from '@material-ui/core';
 import ActivityMain from '../activityMain/ActivityMain';
 
 import useFetch from '../../hooks/useFetch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt, faMoneyBillWaveAlt } from '@fortawesome/free-solid-svg-icons';
+import Loading from '../loading/Loading';
 
-const Main = ({setMenuOptions}) => {
+const Main = ({setMenuOptions, dataUser}) => {
 
   const [url, setUrl] = useState('');
   const [requestOptions, setRequestOptions] = useState('');
@@ -22,7 +23,7 @@ const Main = ({setMenuOptions}) => {
 
   return (
     <>
-
+    {loading ? <Loading/> : null}
         <Grid item container xs={12} sm={4}>
           <Grid item container xs={12} sm={11}>
             <Grid item xs={12} sm={12} alignItems="center">
@@ -38,7 +39,7 @@ const Main = ({setMenuOptions}) => {
                   <Divider />
                   <Grid item container xs={12} sm={12}>
                     <Grid item xs={12} sm={12} >
-                      <Typography>$150.00</Typography>
+                      <Typography>${dataUser?.user[0].balance}</Typography>
                     </Grid>
                   </Grid>
 

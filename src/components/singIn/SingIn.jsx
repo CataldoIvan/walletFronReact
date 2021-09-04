@@ -1,13 +1,13 @@
-import { Avatar, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, Paper, TextField, Tooltip, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import './singIn.css';
+import { Avatar, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, Tooltip, Typography } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-
 
 const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
 
+  const [validatedFields, setValidatedFields] = useState(false);
   const [inputName, setinputName] = useState('');
   const [inputLastName, setinputLastName] = useState('');
   const [inputDocument, setinputDocument] = useState('');
@@ -16,8 +16,8 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
   const [inputPhone, setinputPhone] = useState('');
   const [inputPassword, setinputPassword] = useState('');
   const [inputConfirmPassword, setinputConfirmPassword] = useState('');
-  const [errorNombre, setErrorNombre] = useState(false);
-  const [errorLastNombre, setErrorLastNombre] = useState(false);
+  const [errorNombre, setErrorName] = useState(false);
+  const [errorLastNombre, setErrorLastName] = useState(false);
   const [errorDocument, setErrorDocument] = useState(false);
   const [errorBirthday, setErrorBirthday] = useState(false);
   const [errorPhone, setErrorPhone] = useState(false);
@@ -28,32 +28,48 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
 
   const formHandler = (e) => {
     e.preventDefault();
-    setUrl("https://users-wallet-go.herokuapp.com/users/register");
-    setRequestOptions({
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(
-        {
-          name: inputName,
-          lastname: inputLastName,
-          document: parseInt(inputDocument),
-          birthday: inputBirthday,
-          email: inputEmail,
-          phone: parseInt(inputPhone),
-          password: inputPassword,
-        })
-    });
+    if (validatedFields && inputName !== '' && inputLastName !== '' && inputDocument !== ''
+      && inputBirthday !== '' && inputEmail !== '' && inputPhone !== '' && inputPassword !== '') {
+      setUrl("https://users-wallet-go.herokuapp.com/users/register");
+      setRequestOptions({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          {
+            name: inputName,
+            lastname: inputLastName,
+            document: parseInt(inputDocument),
+            birthday: inputBirthday,
+            email: inputEmail,
+            phone: parseInt(inputPhone),
+            password: inputPassword,
+          })
+      });
+    }
+    else {
+      if (inputName === '') { setErrorName(true) }
+      if (inputLastName === '') { setErrorLastName(true) }
+      if (inputDocument === '') { setErrorDocument(true) }
+      if (inputBirthday === '') { setErrorBirthday(true) }
+      if (inputEmail === '') { setErrorEmail('Este campo es obligatorio.') }
+      if (inputPhone === '') { setErrorPhone(true) }
+      if (inputPassword === '') { setErrorPassword('Este campo es obligatorio.') }
+      if (inputConfirmPassword === '') { setErrorPasswordConfirm('La contraseña es invalida.') }
+    }
   };
 
   const emailValidation = (e) => {
     let regEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (e.target.value === '') {
-      setErrorEmail('Este campo es obligatorio.')
+      setErrorEmail('Este campo es obligatorio.');
+      setValidatedFields(false);
     }
     else if (e.target.value.match(regEmail) || e.target.value === '') {
       setErrorEmail('')
+      setValidatedFields(true);
     } else {
-      setErrorEmail('El email es invalido.')
+      setErrorEmail('El email es invalido.');
+      setValidatedFields(false);
     }
   }
 
@@ -62,11 +78,14 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
     let regPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (e.target.value === '') {
       setErrorPassword('Este campo es obligatorio.')
+      setValidatedFields(false);
     }
     else if (e.target.value.match(regPassword) || e.target.value === '') {
       setErrorPassword('')
+      setValidatedFields(true);
     } else {
       setErrorPassword('La contraseña es invalida.')
+      setValidatedFields(false);
     }
   }
 
@@ -75,11 +94,14 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
     let regPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (e.target.value === '') {
       setErrorPasswordConfirm('Este campo es obligatorio.')
+      setValidatedFields(false);
     }
     else if (e.target.value.match(regPassword) || e.target.value === '') {
       setErrorPasswordConfirm('')
+      setValidatedFields(true);
     } else {
       setErrorPasswordConfirm('La contraseña es invalida.')
+      setValidatedFields(false);
     }
   }
 
@@ -91,7 +113,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
   };
 
 
-  const paperStyle = { padding: 30, height: '68vh', width: '40vw', margin: "40px auto" }
+  const paperStyle = { padding: 30, height: '75vh', width: '40vw', margin: "40px auto" }
   const avatarStyle = { backgroundColor: 'rgb(105, 105, 221)', padding: '8px' }
   const btnstyle = { margin: '8px 0' }
   const textFieldStyle = { margin: '5px', width: '18vw' }
@@ -115,7 +137,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               id="standard-error-helper-text"
               error={errorNombre === true}
               value={inputName}
-              onBlur={() => { setErrorNombre(inputName === '' ? true : false) }}
+              onBlur={() => { setErrorName(inputName === '' ? true : false) }}
               onChange={(e) => { setinputName(e.target.value) }}
             />
             {errorNombre ? (
@@ -135,7 +157,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               id="standard-error-helper-text"
               error={errorLastNombre === true}
               value={inputLastName}
-              onBlur={() => { setErrorLastNombre(inputLastName === '' ? true : false) }}
+              onBlur={() => { setErrorLastName(inputLastName === '' ? true : false) }}
               onChange={(e) => { setinputLastName(e.target.value) }}
             />
             {errorLastNombre ? (
@@ -146,7 +168,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
           </FormControl>
         </Grid>
         <Grid style={grid}>
-        <FormControl variant="outlined">
+          <FormControl variant="outlined">
             <OutlinedInput
               style={textFieldStyle}
               variant="outlined"
@@ -214,7 +236,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               placeholder='Ingresar Telefono'
               required
               margin="dense"
-              type='phone'
+              type='number'
               id="standard-error-helper-text"
               error={errorPhone === true}
               value={inputPhone}
@@ -229,37 +251,40 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
           </FormControl>
         </Grid>
         <Grid style={grid}>
-          <FormControl variant="outlined">
-            <OutlinedInput style={textFieldStyle}
-              placeholder='Ingresar contraseña'
-              type={showPassword ? 'text' : 'password'}
-              required
-              margin="dense"
-              id="standard-error-helper-text"
-              error={errorPassword !== ''}
-              helperText={errorPassword}
-              value={inputPassword}
-              onBlur={(e) => passwordValidation(e)}
-              onChange={(e) => setinputPassword(e.target.value)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-            {errorPassword !== '' ? (
-              <FormHelperText error id="accountId-error">
-                {errorPassword}
-              </FormHelperText>
-            ) : null}
-          </FormControl>
+          <Tooltip title="La contraseña debe ser de mas de 8 caracteres 
+        y debe contener al menos 1 mayuscula y 1 numero" placement="left" arrow>
+            <FormControl variant="outlined">
+              <OutlinedInput style={textFieldStyle}
+                placeholder='Ingresar contraseña'
+                type={showPassword ? 'text' : 'password'}
+                required
+                margin="dense"
+                id="standard-error-helper-text"
+                error={errorPassword !== ''}
+                helperText={errorPassword}
+                value={inputPassword}
+                onBlur={(e) => passwordValidation(e)}
+                onChange={(e) => setinputPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {errorPassword !== '' ? (
+                <FormHelperText error id="accountId-error">
+                  {errorPassword}
+                </FormHelperText>
+              ) : null}
+            </FormControl>
+          </Tooltip>
           <FormControl variant="outlined">
             <OutlinedInput style={textFieldStyle}
               placeholder='Ingresar contraseña'

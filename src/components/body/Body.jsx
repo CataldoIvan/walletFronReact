@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './body.css';
+import useFetch from '../../hooks/useFetch';
 import Main from '../main/Main';
 import Activity from '../activity/Activity';
 import Wallet from '../wallet/Wallet';
@@ -13,6 +14,18 @@ import { Grid } from '@material-ui/core';
 const Body = ({ setTitle }) => {
 
   const [menuOptions, setMenuOptions] = useState(0);
+  
+  const [url, setUrl] = useState('');
+  const [requestOptions, setRequestOptions] = useState('');
+  const { loading, data: dataUser, error } = useFetch(url, requestOptions);
+
+  useEffect(() => {
+    setUrl("https://users-wallet-go.herokuapp.com/users/user");
+    setRequestOptions({
+    method: 'GET',
+     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+ }, []);
 
   useEffect(() => {
     menuOptions === 0 ? setTitle('Inicio')
@@ -28,16 +41,16 @@ const Body = ({ setTitle }) => {
       <Grid container direction="row" className="body">
         <Grid item container xs={12} sm={2}>
           <Grid item xs={12} sm={11}>
-            <Menu setMenuOptions={setMenuOptions} />
+            <Menu setMenuOptions={setMenuOptions} dataUser={dataUser}/>
           </Grid>
           <Grid item xs={12} sm={1}></Grid>
         </Grid>
-        {menuOptions === 0 ? <Main setMenuOptions={setMenuOptions} />
+        {menuOptions === 0 ? <Main setMenuOptions={setMenuOptions} dataUser={dataUser} />
           : menuOptions === 1 ? <Wallet />
             : menuOptions === 2 ? <Activity />
               : menuOptions === 3 ? <SendMoney />
                 : menuOptions === 4 ? <AskForMoney />
-                  : <Profile />}
+                  : <Profile dataUser={dataUser}/> }
       </Grid>
     </>
   );
