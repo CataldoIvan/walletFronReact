@@ -180,7 +180,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               error={errorDocument === true}
               value={inputDocument}
               onBlur={() => { setErrorDocument(inputDocument === '' ? true : false) }}
-              onChange={(e) => { setinputDocument(e.target.value) }}
+              onChange={inputDocument.length < 11 ? (e) => { setinputDocument(e.target.value)} : null}
             />
             {errorDocument ? (
               <FormHelperText error id="accountId-error">
@@ -241,7 +241,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               error={errorPhone === true}
               value={inputPhone}
               onBlur={() => { setErrorPhone(inputPhone === '' ? true : false) }}
-              onChange={(e) => { setinputPhone(e.target.value) }}
+              onChange={inputPhone.length < 11 ? (e) => { setinputPhone(e.target.value)} : null}
             />
             {errorPhone ? (
               <FormHelperText error id="accountId-error">

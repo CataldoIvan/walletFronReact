@@ -10,22 +10,45 @@ import Profile from '../profile/Profile';
 
 import Menu from '../menu/Menu';
 import { Grid } from '@material-ui/core';
+import Header from '../header/Header';
 
-const Body = ({ setTitle }) => {
+const Body = ({  }) => {
 
+  const [title, setTitle] = useState('Inicio');
   const [menuOptions, setMenuOptions] = useState(0);
-  
-  const [url, setUrl] = useState('');
-  const [requestOptions, setRequestOptions] = useState('');
-  const { loading, data: dataUser, error } = useFetch(url, requestOptions);
+  const [urlActivity, setUrlActivity] = useState('');
+  const [requestOptionsActivity, setRequestOptionsActivity] = useState('');
+  const { loading: loadingActivity, data: dataActivity, error: errorActivity } = useFetch(urlActivity, requestOptionsActivity);
+  const [urlUser, setUrlUser] = useState('');
+  const [requestOptionsUser, setRequestOptionsUser] = useState('');
+  const { loading: loadingUser, data: dataUser, error: errorUser } = useFetch(urlUser, requestOptionsUser);
+  const [urlBalance, setUrlBalance] = useState('');
+  const [requestOptionsBalance, setRequestOptionsBalance] = useState('');
+  const { loading: loadingBalance, data: dataBalance, error: errorBalance } = useFetch(urlBalance, requestOptionsBalance);
 
   useEffect(() => {
-    setUrl("https://users-wallet-go.herokuapp.com/users/user");
-    setRequestOptions({
+    setUrlUser("https://users-wallet-go.herokuapp.com/users/user");
+    setRequestOptionsUser({
     method: 'GET',
      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
- }, []);
+    setUrlBalance('https://users-wallet-go.herokuapp.com/users/balanceuser');
+    setRequestOptionsBalance({
+    method: 'GET',
+     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}
+    });
+  }, []);
+
+    useEffect(() => {
+    if(dataUser){     
+    var id = dataUser?.user[0].id;
+    setUrlActivity(`https://billetera-virtual-node-express.herokuapp.com/home?id=${id}`);
+        setRequestOptionsActivity({
+            method: 'GET',
+            headers: {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzExMTQzNzksInVzZXJfaWQiOiI5MGNlNzBjOC0wZjUxLTExZWMtYThkZi0wYTJlYmYwZmYyZjEifQ.8c7EUjLAlpjU_EWBT3X-vFCmComaFsFXyqHBImsp6ow'}
+        });
+      }
+ }, [dataUser]);
 
   useEffect(() => {
     menuOptions === 0 ? setTitle('Inicio')
@@ -38,6 +61,7 @@ const Body = ({ setTitle }) => {
 
   return (
     <>
+    <Header title={title} dataActivity={dataActivity}/>
       <Grid container direction="row" className="body">
         <Grid item container xs={12} sm={2}>
           <Grid item xs={12} sm={11}>
@@ -45,12 +69,12 @@ const Body = ({ setTitle }) => {
           </Grid>
           <Grid item xs={12} sm={1}></Grid>
         </Grid>
-        {menuOptions === 0 ? <Main setMenuOptions={setMenuOptions} dataUser={dataUser} />
+        {menuOptions === 0 ? <Main setMenuOptions={setMenuOptions} dataUser={dataUser} dataBalance={dataBalance}/>
           : menuOptions === 1 ? <Wallet />
-            : menuOptions === 2 ? <Activity />
-              : menuOptions === 3 ? <SendMoney />
-                : menuOptions === 4 ? <AskForMoney />
-                  : <Profile dataUser={dataUser}/> }
+            : menuOptions === 2 ? <Activity dataActivity={dataActivity} loadingActivity={loadingActivity} dataUser={dataUser}/>
+              : menuOptions === 3 ? <SendMoney data={dataUser}/>
+                : menuOptions === 4 ? <AskForMoney data={dataUser}/>
+                  : <Profile dataUser={dataUser} loadingUser={loadingUser}/> }
       </Grid>
     </>
   );

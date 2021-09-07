@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt, faMoneyBillWaveAlt } from '@fortawesome/free-solid-svg-icons';
 import Loading from '../loading/Loading';
 
-const Main = ({setMenuOptions, dataUser}) => {
+const Main = ({setMenuOptions, dataUser, dataBalance}) => {
 
   const [url, setUrl] = useState('');
   const [requestOptions, setRequestOptions] = useState('');
@@ -39,7 +39,7 @@ const Main = ({setMenuOptions, dataUser}) => {
                   <Divider />
                   <Grid item container xs={12} sm={12}>
                     <Grid item xs={12} sm={12} >
-                      <Typography>${dataUser?.user[0].balance}</Typography>
+                      <Typography>${dataBalance?.user[0].balance}</Typography>
                     </Grid>
                   </Grid>
 
@@ -83,7 +83,7 @@ const Main = ({setMenuOptions, dataUser}) => {
         </Grid>
         <Grid item container xs={12} sm={6}>
           <Grid item xs={12} sm={11}>
-            <ActivityMain setMenuOptions={setMenuOptions}></ActivityMain>
+            <ActivityMain setMenuOptions={setMenuOptions} dataUser={dataUser}></ActivityMain>
           </Grid>
           <Grid item xs={12} sm={1}></Grid>
         </Grid>

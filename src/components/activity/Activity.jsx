@@ -91,24 +91,14 @@ const useStyles2 = makeStyles({
     },
 });
 
-export default function CustomPaginationActionsTable() {
+export default function CustomPaginationActionsTable({dataActivity, loadingActivity}) {
 
     let date = Date.now();
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [url, setUrl] = useState('');
-    const [requestOptions, setRequestOptions] = useState('');
-    const { loading, data, error } = useFetch(url, requestOptions);
 
-    useEffect(() => {
-        setUrl("https://billetera-virtual-node-express.herokuapp.com/home");
-        setRequestOptions({
-            method: 'GET'
-        });
-    }, []);
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data?.activitys.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, dataActivity?.activitys.length - page * rowsPerPage);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -122,7 +112,7 @@ export default function CustomPaginationActionsTable() {
     return (
         <>
             <Grid item container xs={12} sm={8}>
-                {loading ? <Loading /> : null}
+                {loadingActivity ? <Loading /> : null}
 
                 <Grid xs={12} sm={2}></Grid>
                 <Grid xs={12} sm={10}>
@@ -130,7 +120,7 @@ export default function CustomPaginationActionsTable() {
                         id="free-solo-demo"
                         freeSolo
                         size="small"
-                        options={data?.activitys.map((activitys) => activitys.origen_nombre)}
+                        options={dataActivity?.activitys.map((activitys) => activitys.origen_nombre)}
                         renderInput={(params) => (
                             <TextField {...params} label="Buscar por origen" margin="normal" variant="outlined" />
                         )}
@@ -141,10 +131,10 @@ export default function CustomPaginationActionsTable() {
                     <TableContainer component={Paper}>
                         <Table className={classes.table} aria-label="custom pagination table">
                             <TableBody>
-                                {data ?
+                                {dataActivity ?
                                     (rowsPerPage > 0
-                                        ? data?.activitys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        : data?.activitys
+                                        ? dataActivity?.activitys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        : dataActivity?.activitys
                                     ).map((activity) => (
                                         <TableRow key={activity._id}>
                                             <TableCell style={{ width: 80 }} align="right">
@@ -174,7 +164,7 @@ export default function CustomPaginationActionsTable() {
                                     <TablePagination
                                         rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                         colSpan={3}
-                                        count={data?.activitys.length}
+                                        count={dataActivity?.activitys.length}
                                         rowsPerPage={rowsPerPage}
                                         labelRowsPerPage={"Filas por pagina: "}
                                         page={page}

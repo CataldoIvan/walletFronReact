@@ -16,117 +16,117 @@ import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Edit } from '@material-ui/icons';
-import { Divider, Fade, Paper } from '@material-ui/core';
-
-
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { Divider, Fade, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { faEdit, faAddressCard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    maxWidth: 752,
-  },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2),
-  },
-}));
+import Loading from '../loading/Loading';
+import dateFormat from 'dateformat';
 
 
-
-const Profile = ({ dataUser }) => {
-  const classes = useStyles();
-  const [dense, setDense] = useState(false);
-  const [secondary, setSecondary] = useState(false);
-
+const Profile = ({ dataUser, loading }) => {
   return (
-    <div className={classes.root}>
-
-
-    <Paper>
-      <Typography variant="h6" className={classes.title}>
-        DATOS PERSONALES
-      </Typography>
-      <div className={classes.demo}>
-        <List dense={dense}>
-          <ListItem>
-            <ListItemText primary="Nombre y Apellido" />
-            <ListItemText primary={dataUser?.user[0].name + " " + dataUser?.user[0].lastname} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <FontAwesomeIcon icon={faEdit} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <Divider />
-
-          <ListItem>
-            <ListItemText primary="Email" />
-            <ListItemText primary={dataUser?.user[0].email} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <FontAwesomeIcon icon={faEdit} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <Divider />
-
-          <ListItem>
-            <ListItemText primary="Documento" />
-            <ListItemText primary={dataUser?.user[0].document} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <FontAwesomeIcon icon={faEdit} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <ListItemText primary="Fecha de nacimiento" />
-            <ListItemText primary={dataUser?.user[0].birthday} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <FontAwesomeIcon icon={faEdit} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <ListItemText primary="Telefono" />
-            <ListItemText primary={dataUser?.user[0].phone} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <FontAwesomeIcon icon={faEdit} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <ListItemText primary="Contraseña" />
-            <ListItemText primary="****"/>
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <FontAwesomeIcon icon={faEdit} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-
-
-
-        </List>
-      </div>
-
-      </Paper>
-    </div>
+    <Grid item container xs={12} sm={8}>
+      {loading ? <Loading /> : null}
+      <Grid xs={12} sm={2}></Grid>
+      <Grid xs={12} sm={10}>
+        <TableContainer component={Paper}>
+          <Table size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faAddressCard} />
+                  </IconButton>
+                  &nbsp;&nbsp;&nbsp;&nbsp;Datos personales
+                </TableCell>
+                <TableCell />
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell style={{ width: 150 }} align="left">
+                  Nombre y Apellido
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="left">
+                  {dataUser?.user[0].name + " " + dataUser?.user[0].lastname}
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="right">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faEdit} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell style={{ width: 80 }} align="left">
+                  Email
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="left">
+                  {dataUser?.user[0].email}
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="right">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faEdit} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell style={{ width: 80 }} align="left">
+                  Documento
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="left">
+                  {dataUser?.user[0].document}
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="right">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faEdit} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell style={{ width: 80 }} align="left">
+                  Fecha de nacimiento
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="left">
+                  {dateFormat(dataUser?.user[0].birthday, "dd/mm/yyyy")}
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="right">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faEdit} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell style={{ width: 80 }} align="left">
+                  Telefono
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="left">
+                  {dataUser?.user[0].phone}
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="right">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faEdit} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell style={{ width: 80 }} align="left">
+                  Contraseña
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="left">
+                  **********
+                </TableCell>
+                <TableCell style={{ width: 80 }} align="right">
+                  <IconButton edge="end" aria-label="delete">
+                    <FontAwesomeIcon icon={faEdit} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 }
 export default Profile;

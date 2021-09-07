@@ -10,7 +10,6 @@ import Loading from './components/loading/Loading';
 
 
 function App() {
-  const [title, setTitle] = useState('Inicio');
   const [singIn, setSingIn] = useState(false);
   const [url, setUrl] = useState('');
   const [requestOptions, setRequestOptions] = useState('');
@@ -33,10 +32,9 @@ function App() {
   return (
     <div className="App">
       {loading ? <Loading/> : null}
-      {isExpired ? null : <Header title={title} />}
       {isExpired ? singIn ? <SingIn setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} loading={loading}/> 
       : <Login setUrl={setUrl} setRequestOptions={setRequestOptions} setSingIn={setSingIn} loading={loading}/> 
-      : <Body setTitle={setTitle}/> }
+      : <Body /> }
     </div>
   );
 }
