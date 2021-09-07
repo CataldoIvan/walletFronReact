@@ -51,7 +51,7 @@ const SendMoney = ({ data }) => {
       setUrlSend('https://billetera-virtual-node-express.herokuapp.com/addOperation');
       setRequestOptionsSend({
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        headers: {'Authorization': localStorage.getItem('token')},
         body: JSON.stringify({
           origen_id: data.user[0].id,
           origen_nombre: data.user[0].name + " " + data?.user[0].lastname,

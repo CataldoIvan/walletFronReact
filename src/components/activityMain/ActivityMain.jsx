@@ -21,7 +21,7 @@ const ActivityMain = ({setMenuOptions, dataUser}) => {
         setUrl(`https://billetera-virtual-node-express.herokuapp.com/home?id=${id}`);
         setRequestOptions({
             method: 'GET',
-            headers: {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzExMTQzNzksInVzZXJfaWQiOiI5MGNlNzBjOC0wZjUxLTExZWMtYThkZi0wYTJlYmYwZmYyZjEifQ.8c7EUjLAlpjU_EWBT3X-vFCmComaFsFXyqHBImsp6ow'}
+            headers: {'Authorization': localStorage.getItem('token')}
         });}
     }, [dataUser]);
     return (
