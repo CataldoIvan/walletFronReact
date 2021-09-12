@@ -7,7 +7,6 @@ import Wallet from '../wallet/Wallet';
 import SendMoney from '../sendMoney/SendMoney';
 import AskForMoney from '../askForMoney/AskForMoney';
 import Profile from '../profile/Profile';
-
 import Menu from '../menu/Menu';
 import { Grid } from '@material-ui/core';
 import Header from '../header/Header';
@@ -32,16 +31,18 @@ const Body = ({  }) => {
     method: 'GET',
      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
-    setUrlBalance('https://users-wallet-go.herokuapp.com/users/balanceuser');
-    setRequestOptionsBalance({
-    method: 'GET',
-     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}
-    });
   }, []);
 
     useEffect(() => {
     if(dataUser){     
     var id = dataUser?.user[0].id;
+        
+    setUrlBalance(`https://wallets-back-node.herokuapp.com/wallets/${id}`);
+    setRequestOptionsBalance({
+    method: 'GET',
+     headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')}
+    });
+
     setUrlActivity(`https://billetera-virtual-node-express.herokuapp.com/home?id=${id}`);
         setRequestOptionsActivity({
             method: 'GET',
@@ -70,7 +71,7 @@ const Body = ({  }) => {
           <Grid item xs={12} sm={1}></Grid>
         </Grid>
         {menuOptions === 0 ? <Main setMenuOptions={setMenuOptions} dataUser={dataUser} dataBalance={dataBalance}/>
-          : menuOptions === 1 ? <Wallet />
+          : menuOptions === 1 ? <Wallet dataBalance={dataBalance}/>
             : menuOptions === 2 ? <Activity dataActivity={dataActivity} loadingActivity={loadingActivity} dataUser={dataUser}/>
               : menuOptions === 3 ? <SendMoney data={dataUser}/>
                 : menuOptions === 4 ? <AskForMoney data={dataUser}/>

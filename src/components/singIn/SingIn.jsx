@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { decodeToken } from "react-jwt";
 import './singIn.css';
 import { Avatar, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, Tooltip, Typography } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
+const SingIn = ({ setUrl, setRequestOptions, setSingIn, data }) => {
 
   const [validatedFields, setValidatedFields] = useState(false);
   const [inputName, setinputName] = useState('');
@@ -57,6 +58,22 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
       if (inputConfirmPassword === '') { setErrorPasswordConfirm('La contraseña es invalida.') }
     }
   };
+
+  useEffect(() => {
+    if (data?.token) {
+      console.log('seee')
+      const token = decodeToken(data?.token);
+      setUrl("https://wallets-back-node.herokuapp.com/wallets");
+      setRequestOptions({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': data?.token },
+        body: JSON.stringify(
+          {
+            idUser: token.user_id
+          })
+      });
+    }
+  }, [data]);
 
   const emailValidation = (e) => {
     let regEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -180,7 +197,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               error={errorDocument === true}
               value={inputDocument}
               onBlur={() => { setErrorDocument(inputDocument === '' ? true : false) }}
-              onChange={inputDocument.length < 11 ? (e) => { setinputDocument(e.target.value)} : null}
+              onChange={inputDocument.length < 11 ? (e) => { setinputDocument(e.target.value) } : null}
             />
             {errorDocument ? (
               <FormHelperText error id="accountId-error">
@@ -241,7 +258,7 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
               error={errorPhone === true}
               value={inputPhone}
               onBlur={() => { setErrorPhone(inputPhone === '' ? true : false) }}
-              onChange={inputPhone.length < 11 ? (e) => { setinputPhone(e.target.value)} : null}
+              onChange={inputPhone.length < 11 ? (e) => { setinputPhone(e.target.value) } : null}
             />
             {errorPhone ? (
               <FormHelperText error id="accountId-error">
@@ -317,9 +334,14 @@ const SingIn = ({ setUrl, setRequestOptions, setSingIn }) => {
             ) : null}
           </FormControl>
         </Grid>
+        {data?.error ? (
+          <Typography color="error">
+            El registro no se a podido realizar.
+          </Typography>
+        ) : null}
         <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth onClick={formHandler}>Registrarse</Button>
 
-        <Typography > Ya tenes cuenta?
+        <Typography > Ya tenes cuenta?&nbsp;&nbsp;
           <Link component="button" variant="body2" onClick={() => setSingIn(false)}>
             Inicia sesion
           </Link>

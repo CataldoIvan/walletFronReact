@@ -1,0 +1,15 @@
+.card{
+    background-color: #7bb8cc;
+    height: 23vh;
+    width: 23vw;
+   
+}
+.cardContainer{
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+.logo{
+    height: 9vh;
+}

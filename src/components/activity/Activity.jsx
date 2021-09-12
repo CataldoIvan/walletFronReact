@@ -91,7 +91,7 @@ const useStyles2 = makeStyles({
     },
 });
 
-export default function CustomPaginationActionsTable({dataActivity, loadingActivity}) {
+export default function CustomPaginationActionsTable({ dataActivity, loadingActivity }) {
 
     let date = Date.now();
     const classes = useStyles2();
@@ -122,7 +122,10 @@ export default function CustomPaginationActionsTable({dataActivity, loadingActiv
                         size="small"
                         options={dataActivity?.activitys.map((activitys) => activitys.origen_nombre)}
                         renderInput={(params) => (
-                            <TextField {...params} label="Buscar por origen" margin="normal" variant="outlined" />
+                            <TextField {...params}
+                                label="Buscar por origen"
+                                margin="normal"
+                                variant="outlined" />
                         )}
                     />
                 </Grid>
@@ -131,7 +134,7 @@ export default function CustomPaginationActionsTable({dataActivity, loadingActiv
                     <TableContainer component={Paper}>
                         <Table className={classes.table} aria-label="custom pagination table">
                             <TableBody>
-                                {dataActivity ?
+                                {dataActivity?.activitys[0] ?
                                     (rowsPerPage > 0
                                         ? dataActivity?.activitys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         : dataActivity?.activitys
@@ -152,13 +155,20 @@ export default function CustomPaginationActionsTable({dataActivity, loadingActiv
                                                     dateFormat(activity.updatedAt, "hh:ss") : dateFormat(activity.updatedAt, "dd/mm/yyyy")}
                                             </TableCell>
                                         </TableRow>
-                                    )) : null}
+                                    ))
+                                    : <TableRow>
+                                        <TableCell style={{ width: 80 }} align="center">
+                                            Aun no tiene actividades para ver
+                                        </TableCell>
+                                    </TableRow>
+                                }
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: 53 * emptyRows }}>
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
                             </TableBody>
+                            {dataActivity?.activitys[0] ?
                             <TableFooter>
                                 <TableRow>
                                     <TablePagination
@@ -177,7 +187,7 @@ export default function CustomPaginationActionsTable({dataActivity, loadingActiv
                                         ActionsComponent={TablePaginationActions}
                                     />
                                 </TableRow>
-                            </TableFooter>
+                            </TableFooter> : null}
                         </Table>
                     </TableContainer>
                 </Grid>

@@ -37,7 +37,7 @@ const ActivityMain = ({setMenuOptions, dataUser}) => {
                         </TableRow>
                         {data?.activitys.slice(0, 5).map((activitys) => (
                             <TableRow>
-                                <TableCell component="th" scope="row">
+                                <TableCell component="th" scope="row" style={{ width: 150 }}>
                                     <Avatar>{
                                     activitys.origen_id === dataUser?.user[0].id ?
                                     activitys.destino_nombre.substring(0, 1).toUpperCase()
@@ -51,7 +51,7 @@ const ActivityMain = ({setMenuOptions, dataUser}) => {
                                     activitys.destino_nombre
                                     : activitys.origen_nombre}
                                 </TableCell>
-                                <TableCell style={{ width: 160 }} align="right">
+                                <TableCell style={{ width: 150 }} align="right">
                                     ${activitys.monto}
                                 </TableCell>
                             </TableRow>
@@ -60,8 +60,8 @@ const ActivityMain = ({setMenuOptions, dataUser}) => {
                     <TableFooter>
                         <TableRow>
                             <TableCell component="th" scope="row"></TableCell>
-                            <TableCell component="th" scope="row" align="center" className="boton" onClick={() => setMenuOptions(2)}>
-                                Ver todas las actividades
+                            <TableCell component="th" scope="row"  align="center" className="boton" onClick={() => setMenuOptions(2)}>
+                            {data?.activitys[0] ? 'Ver todas las actividades' : 'Aun no tiene actividades para ver'}
                             </TableCell>
                             <TableCell component="th" scope="row"></TableCell>
                         </TableRow>

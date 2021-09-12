@@ -37,14 +37,25 @@ const Main = ({setMenuOptions, dataUser, dataBalance}) => {
                 </Grid>
                 </Grid>
                   <Divider />
-                  <Grid item container xs={12} sm={12}>
+                  <Grid item container direction="row" xs={12} sm={12} >
+                  <Grid item container xs={12} sm={6}>
                     <Grid item xs={12} sm={12} >
-                      <Typography>${dataBalance?.user[0].balance}</Typography>
+                      <Typography>Saldo $</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Typography>${dataBalance?.balancePesos}</Typography>
                     </Grid>
                   </Grid>
-
+                  <Grid item container xs={12} sm={6}>
+                    <Grid item xs={12} sm={12}>
+                      <Typography>Saldo US$</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Typography>US${dataBalance?.balanceDolares}</Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Paper>
-              
             </Grid>
             <Grid item xs={12} sm={12}>
               {data ? <Paper elevation={3} className="dolar">

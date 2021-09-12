@@ -5,20 +5,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock } from '@fortawesome/free-solid-svg-icons'
 import Forgetpassword from '../forgetpassword/Forgetpassword';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { useCookies } from 'react-cookie';
 
-const Login = ({ setUrl, setRequestOptions, setSingIn }) => {
+const Login = ({ setUrl, setRequestOptions, setSingIn, data }) => {
 
-  const [validatedFields, setValidatedFields] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['credentials']);
+  const [validatedFields, setValidatedFields] = useState(cookies.credentials ? true : false);
   const [forgetPassword, setForgetPassword] = useState(false);
-  const [inputEmail, setinputEmail] = useState('');
-  const [inputPassword, setinputPassword] = useState('');
+  const [inputEmail, setinputEmail] = useState(cookies.credentials ? cookies.credentials.email : '');
+  const [inputPassword, setinputPassword] = useState(cookies.credentials ? cookies.credentials.password : '');
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberCredentials, setRememberCredentials] = useState(cookies.credentials ? cookies.credentials.remember : false);
 
   const formHandler = (e) => {
     e.preventDefault();
     if (validatedFields && inputEmail !== '' && inputPassword !== '') {
+      if (rememberCredentials) {
+        setCookie('credentials', { email: inputEmail, password: inputPassword, remember: true }, { path: '/' });
+      }
+      else {
+        removeCookie('credentials');
+      }
       setUrl("https://users-wallet-go.herokuapp.com/users/login");
       setRequestOptions({
         method: 'POST',
@@ -103,55 +112,62 @@ const Login = ({ setUrl, setRequestOptions, setSingIn }) => {
           ) : null}
         </FormControl>
         <Tooltip title="La contraseña debe ser de mas de 8 caracteres 
-        y debe contener al menos 1 mayuscula y 1 numero" placement="left" arrow>    
-        <FormControl variant="outlined">
-          <OutlinedInput style={textFieldStyle}
-            placeholder='Ingresar contraseña'
-            type={showPassword ? 'text' : 'password'}
-            required
-            margin="dense"
-            id="standard-error-helper-text"
-            error={errorPassword !== ''}
-            helperText={errorPassword}
-            value={inputPassword}
-            onBlur={(e) => passwordValidation(e)}
-            onChange={(e) => setinputPassword(e.target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          {errorPassword !== '' ? (
-            <FormHelperText error id="accountId-error">
-              {errorPassword}
-            </FormHelperText>
-          ) : null}
-        </FormControl>
+        y debe contener al menos 1 mayuscula y 1 numero" placement="left" arrow>
+          <FormControl variant="outlined">
+            <OutlinedInput style={textFieldStyle}
+              placeholder='Ingresar contraseña'
+              type={showPassword ? 'text' : 'password'}
+              required
+              margin="dense"
+              id="standard-error-helper-text"
+              error={errorPassword !== ''}
+              helperText={errorPassword}
+              value={inputPassword}
+              onBlur={(e) => passwordValidation(e)}
+              onChange={(e) => setinputPassword(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            {errorPassword !== '' ? (
+              <FormHelperText error id="accountId-error">
+                {errorPassword}
+              </FormHelperText>
+            ) : null}
+          </FormControl>
         </Tooltip>
         <FormControlLabel
           control={
             <Checkbox
               name="checkedB"
               color="primary"
+              checked={rememberCredentials}
+              onClick={() => setRememberCredentials(!rememberCredentials)}
             />
           }
           label="Recordar credenciales"
         />
+        {data?.error ? (
+          <Typography color="error">
+            Email o contraseña incorrectos.
+          </Typography>
+        ) : null}
         <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth onClick={formHandler}>Iniciar sesion</Button>
         <Typography >
           <Link component="button" variant="body2" onClick={() => { setForgetPassword(true) }}>
             Olvido su contraseña?
           </Link>
         </Typography>
-        <Typography > Todavia no tiene cuenta?
+        <Typography > Todavia no tiene cuenta?&nbsp;&nbsp;
           <Link component="button" variant="body2" onClick={() => { setSingIn(true) }}>
             Registrarse
           </Link>
