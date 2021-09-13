@@ -19,6 +19,7 @@ import dateFormat from 'dateformat';
 import { Avatar, Grid, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Loading from '../loading/Loading';
+import OneActivity from '../oneActivity/oneActivity';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -91,7 +92,7 @@ const useStyles2 = makeStyles({
     },
 });
 
-export default function CustomPaginationActionsTable({ dataActivity, loadingActivity }) {
+export default function CustomPaginationActionsTable({ dataActivity, loadingActivity,setOpenActivity,openActivity }) {
 
     let date = Date.now();
     const classes = useStyles2();
@@ -111,11 +112,14 @@ export default function CustomPaginationActionsTable({ dataActivity, loadingActi
 
     return (
         <>
+
             <Grid item container xs={12} sm={8}>
                 {loadingActivity ? <Loading /> : null}
+                {openActivity?<openActivity/>:null}
 
                 <Grid xs={12} sm={2}></Grid>
                 <Grid xs={12} sm={10}>
+                
                     <Autocomplete
                         id="free-solo-demo"
                         freeSolo
@@ -138,8 +142,8 @@ export default function CustomPaginationActionsTable({ dataActivity, loadingActi
                                     (rowsPerPage > 0
                                         ? dataActivity?.activitys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         : dataActivity?.activitys
-                                    ).map((activity) => (
-                                        <TableRow key={activity._id}>
+                                    ).map((activity,index) => (
+                                        <TableRow key={activity._id} onClick={(e)=>{e.preventDefault();setOpenActivity(true)}}>
                                             <TableCell style={{ width: 80 }} align="right">
                                                 <Avatar>{activity.origen_nombre.substring(0, 1).toUpperCase()}</Avatar>
                                             </TableCell>

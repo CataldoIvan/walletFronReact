@@ -3,6 +3,7 @@ import './body.css';
 import useFetch from '../../hooks/useFetch';
 import Main from '../main/Main';
 import Activity from '../activity/Activity';
+import OneActivity from '../oneActivity/oneActivity';
 import Wallet from '../wallet/Wallet';
 import SendMoney from '../sendMoney/SendMoney';
 import AskForMoney from '../askForMoney/AskForMoney';
@@ -12,7 +13,7 @@ import { Grid } from '@material-ui/core';
 import Header from '../header/Header';
 
 const Body = ({  }) => {
-
+//onClick={() => setIndexActivity(index)}
   const [title, setTitle] = useState('Inicio');
   const [menuOptions, setMenuOptions] = useState(0);
   const [urlActivity, setUrlActivity] = useState('');
@@ -24,6 +25,9 @@ const Body = ({  }) => {
   const [urlBalance, setUrlBalance] = useState('');
   const [requestOptionsBalance, setRequestOptionsBalance] = useState('');
   const { loading: loadingBalance, data: dataBalance, error: errorBalance } = useFetch(urlBalance, requestOptionsBalance);
+  const [openActivity, setOpenActivity] = useState(false)
+
+
 
   useEffect(() => {
     setUrlUser("https://users-wallet-go.herokuapp.com/users/user");
@@ -72,10 +76,11 @@ const Body = ({  }) => {
         </Grid>
         {menuOptions === 0 ? <Main setMenuOptions={setMenuOptions} dataUser={dataUser} dataBalance={dataBalance}/>
           : menuOptions === 1 ? <Wallet dataBalance={dataBalance}/>
-            : menuOptions === 2 ? <Activity dataActivity={dataActivity} loadingActivity={loadingActivity} dataUser={dataUser}/>
+            : menuOptions === 2 ?  <Activity openActivity={openActivity} setOpenActivity={setOpenActivity} dataActivity={dataActivity} loadingActivity={loadingActivity} dataUser={dataUser}/>
               : menuOptions === 3 ? <SendMoney data={dataUser}/>
                 : menuOptions === 4 ? <AskForMoney data={dataUser}/>
                   : <Profile dataUser={dataUser} loadingUser={loadingUser}/> }
+
       </Grid>
     </>
   );

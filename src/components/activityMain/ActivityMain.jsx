@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Avatar } from '@material-ui/core';
 import useFetch from '../../hooks/useFetch';
 import Loading from '../loading/Loading';
+import OneActivity from '../oneActivity/oneActivity';
 
 const ActivityMain = ({setMenuOptions, dataUser}) => {
     const [url, setUrl] = useState('');
@@ -35,8 +36,8 @@ const ActivityMain = ({setMenuOptions, dataUser}) => {
                             <TableCell component="th" scope="row"></TableCell>
                             <TableCell component="th" scope="row"></TableCell>
                         </TableRow>
-                        {data?.activitys.slice(0, 5).map((activitys) => (
-                            <TableRow>
+                        {data?.activitys.slice(0, 5).map((activitys,index) => (
+                            <TableRow key={activitys._id} onClick={(e)=>{e.preventDefault(); console.log(`es ${index}`)}}>
                                 <TableCell component="th" scope="row" style={{ width: 150 }}>
                                     <Avatar>{
                                     activitys.origen_id === dataUser?.user[0].id ?
